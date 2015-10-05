@@ -1,11 +1,11 @@
 require "nupack/version"
 
 class Estimate
-	attr_accessor :value, :people, :catagory, :price
-	def initialize(value, people, catagory)
+	attr_accessor :value, :people, :material, :price
+	def initialize(value, people, material)
 		@value = format_value(value)
 		@people = format_people(people)
-		@catagory = catagory
+		@material = material
 
 		return calculate_price
 	end
@@ -40,11 +40,11 @@ class Estimate
 		end
 
 		def markup_materials
-			if @catagory == "drugs"
+			if @material == "drugs"
 				markup_flat*0.075
-			elsif @catagory == "food"
+			elsif @material == "food"
 				markup_flat*0.13
-			elsif @catagory == "electric"
+			elsif @material == "electronics"
 				markup_flat*0.02
 			else
 				0
