@@ -15,7 +15,7 @@ class NupackTest < Minitest::Test
 	    end
 
 	    it "Input 3" do
-	      assert_equal 13707.63, Estimate.new("$2456.95", "4 people", "books").price
+	      assert_equal 13707.63, Estimate.new("$12456.95", "4 people", "books").price
 	    end
 	end
 end
