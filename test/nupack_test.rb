@@ -18,4 +18,21 @@ class NupackTest < Minitest::Test
 	      assert_equal 13707.63, Estimate.new("$12456.95", "4 people", "books").price
 	    end
 	end
+
+	describe "handles invalid inputs" do
+		it "invalid value input" do
+			err1 = assert_raises {Estimate.new("a", "3 people", "food").price}
+			err2 = assert_raises {Estimate.new("$", "3 people", "food").price}
+			err3 = assert_raises {Estimate.new("", "3 people", "food").price}
+			err4 = assert_raises {Estimate.new("$12ab93.34", "3 people", "food").price}
+
+			assert_equal "Invalid value input!", err1.message
+			assert_equal "Invalid value input!", err2.message
+			assert_equal "Invalid value input!", err3.message
+			assert_equal "Invalid value input!", err4.message
+		end
+
+		it "invalid person input" do
+		end
+	end
 end

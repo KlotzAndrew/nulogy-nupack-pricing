@@ -3,7 +3,7 @@ require "nupack/version"
 class Estimate
 	attr_accessor :value, :people, :catagory, :price
 	def initialize(value, people, catagory)
-		@value = value.gsub('$','').to_f*100
+		@value = format_value(value)
 		@people = people.split.first.to_i
 		@catagory = catagory
 
@@ -11,6 +11,14 @@ class Estimate
 	end
 
 	private
+		def format_value(value)
+			strip_value = value.gsub('$','').gsub('.','')
+			if strip_value.match(/\d/).nil? or !strip_value.match(/\D/).nil?
+				raise "Invalid value input!"
+			else	
+				value.gsub('$','').to_f*100
+			end
+		end
 
 		def calculate_markup
 			@price = ((markup_flat + markup_people + markup_materials).to_f/100.00).round(2)
