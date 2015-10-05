@@ -5,7 +5,17 @@ class NupackTest < Minitest::Test
     refute_nil ::Nupack::VERSION
   end
 
-  def test_it_does_something_useful
-    assert false
-  end
+  	describe "correctly estimates examples" do
+		it "Input 1" do
+			assert_equal 1591.58, Estimate.new("$1299.99", "3 people", "food").price
+		end
+
+		it "Input 2" do
+	      assert_equal 6199.81, Estimate.new("$5432.00", "1 person", "drugs").price
+	    end
+
+	    it "Input 3" do
+	      assert_equal 13707.63, Estimate.new("$2456.95", "4 people", "books").price
+	    end
+	end
 end
