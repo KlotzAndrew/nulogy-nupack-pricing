@@ -21,14 +21,14 @@ class Estimate
 		end
 
 		def format_people(people)
-			people_match = people.match(/^\d/)
+			people_match = people.match(/^\d+/)
 			raise "Invalid person input!" if people_match.nil?
 			people_match[0].to_f
 		end
 
 		def calculate_price
-			price = ((markup_flat + markup_people + markup_materials).to_f/100.00).round(2)
-			@price = "$#{price.to_s}"
+			price = '%.2f' % ((markup_flat + markup_people + markup_materials).to_f/100.00)
+			@price = "$#{price}"
 		end
 
 		def markup_flat

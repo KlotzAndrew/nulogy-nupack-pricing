@@ -39,4 +39,22 @@ class NupackTest < Minitest::Test
 			assert_equal "Invalid person input!", err1.message
 		end
 	end
+
+	describe "markups return correct values" do
+		it "returns flat markup" do
+			assert_equal "$105.00", Estimate.new("$100.00", "0 people", "n/a").price
+		end
+
+		it "returns people markup" do
+			assert_equal "$106.26", Estimate.new("$100.00", "1 people", "n/a").price
+			assert_equal "$117.60", Estimate.new("$100.00", "10 people", "n/a").price
+		end
+
+		it "returns material markup" do
+			assert_equal "$112.88", Estimate.new("$100.00", "0 people", "drugs").price
+			assert_equal "$118.65", Estimate.new("$100.00", "0 people", "food").price
+			assert_equal "$107.10", Estimate.new("$100.00", "0 people", "electric").price
+			assert_equal "$105.00", Estimate.new("$100.00", "0 people", "other??").price
+		end
+	end
 end
