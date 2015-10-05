@@ -4,24 +4,31 @@ class Estimate
 	attr_accessor :value, :people, :catagory, :price
 	def initialize(value, people, catagory)
 		@value = format_value(value)
-		@people = people.split.first.to_i
+		@people = format_people(people)
 		@catagory = catagory
 
-		calculate_markup
+		return calculate_price
 	end
 
 	private
 		def format_value(value)
-			strip_value = value.gsub('$','').gsub('.','')
-			if strip_value.match(/\d/).nil? or !strip_value.match(/\D/).nil?
+			clean_value = value.gsub('$','').gsub('.','')
+			if clean_value.match(/\d/).nil? or !clean_value.match(/\D/).nil?
 				raise "Invalid value input!"
 			else	
 				value.gsub('$','').to_f*100
 			end
 		end
 
-		def calculate_markup
-			@price = ((markup_flat + markup_people + markup_materials).to_f/100.00).round(2)
+		def format_people(people)
+			people_match = people.match(/^\d/)
+			raise "Invalid person input!" if people_match.nil?
+			people_match[0].to_f
+		end
+
+		def calculate_price
+			price = ((markup_flat + markup_people + markup_materials).to_f/100.00).round(2)
+			@price = "$#{price.to_s}"
 		end
 
 		def markup_flat
