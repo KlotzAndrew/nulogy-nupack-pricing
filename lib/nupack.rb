@@ -13,16 +13,15 @@ class Estimate
 	private
 		def format_value(value)
 			clean_value = value.gsub('$','').gsub('.','')
-			if clean_value.match(/\d/).nil? or !clean_value.match(/\D/).nil?
-				raise "Invalid value input!"
-			else	
-				value.gsub('$','').to_f*100
-			end
+			raise "Invalid value input!" if clean_value.match(/\d/).nil? # cannot be nil value
+			raise "Invalid value input!" if !clean_value.match(/\D/).nil? # cannot have non-digit chars
+			
+			value.gsub('$','').to_f*100
 		end
 
 		def format_people(people)
 			people_match = people.match(/^\d+/)
-			raise "Invalid person input!" if people_match.nil?
+			raise "Invalid person input!" if people_match.nil? # cannot be nil people
 			people_match[0].to_f
 		end
 
