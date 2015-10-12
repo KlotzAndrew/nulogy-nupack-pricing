@@ -1,52 +1,66 @@
 require "nupack/version"
 
 class Estimate
-	attr_accessor :value, :people, :material, :price
+	attr_accessor :value, :people, :material
+	attr_reader :price
+
+	MATERIAL_MARKUP = {
+		"drugs" => 0.075,
+		"food" => 0.13,
+		"electronics" => 0.02
+	}
+	PEOPLE_MARKUP = 0.012
+	FLAT_MARKUP = 0.05
+
 	def initialize(value, people, material)
-		@value = format_value(value)
-		@people = format_people(people)
+		@value = parse_value(value)
+		@people = parse_people(people)
 		@material = material
 
-		return calculate_price
+		format_final_price(calculate_price)
 	end
 
 	private
-		def format_value(value)
+		def parse_value(value)
 			clean_value = value.gsub('$','').gsub('.','')
-			raise "Invalid value input!" if clean_value.match(/\d/).nil? # cannot be nil value
-			raise "Invalid value input!" if !clean_value.match(/\D/).nil? # cannot have non-digit chars
-			
-			value.gsub('$','').to_f*100
+			value_nil?(clean_value)
+			value_non_digits?(clean_value)
+			value.gsub('$','').to_f
 		end
 
-		def format_people(people)
+		def value_nil?(clean_value)
+			raise "Invalid value input!" if clean_value.match(/\d/).nil? 
+		end
+
+		def value_non_digits?(clean_value)
+			raise "Invalid value input!" if !clean_value.match(/\D/).nil?
+		end
+
+		def parse_people(people)
 			people_match = people.match(/^\d+/)
-			raise "Invalid person input!" if people_match.nil? # cannot be nil people
+			raise "Invalid person input!" if people_match.nil?
 			people_match[0].to_f
 		end
 
 		def calculate_price
-			price = '%.2f' % ((markup_flat + markup_people + markup_materials).to_f/100.00)
+			set_markup_base + add_markup_people + add_markup_materials
+		end
+
+		def set_markup_base
+			@value + @value*FLAT_MARKUP
+		end
+
+		def add_markup_people
+			set_markup_base*@people*PEOPLE_MARKUP
+		end
+
+		def add_markup_materials
+			markup = MATERIAL_MARKUP["#{@material}"] || 0
+			set_markup_base*markup
+		end  
+
+		def format_final_price(raw_price)
+			price = '%.2f' % raw_price
 			@price = "$#{price}"
 		end
-
-		def markup_flat
-			@value*1.05
-		end
-
-		def markup_people
-			markup_flat*@people*0.012
-		end
-
-		def markup_materials
-			if @material == "drugs"
-				markup_flat*0.075
-			elsif @material == "food"
-				markup_flat*0.13
-			elsif @material == "electronics"
-				markup_flat*0.02
-			else
-				0
-			end
-		end  
 end
